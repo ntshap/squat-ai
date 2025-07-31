@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Backend Connection</title>
+</head>
+<body>
+    <h1>Test Koneksi Backend</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testResetSession()">Test Reset Session</button>
+    <div id="result"></div>
+
+    <script>
+        async function testHealth() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing health endpoint...';
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/health');
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <h3>Health Check Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${JSON.stringify(data, null, 2)}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Health Check Error:</h3>
+                    <p style="color: red;">Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        async function testResetSession() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing reset session endpoint...';
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/reset_session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: 'test_session'
+                    })
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <h3>Reset Session Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${JSON.stringify(data, null, 2)}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Reset Session Error:</h3>
+                    <p style="color: red;">Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
