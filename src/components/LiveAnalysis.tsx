@@ -1,5 +1,5 @@
-// File: ntshap/squat-ai/src/components/LiveAnalysis.tsx
-// Deskripsi: Komponen React yang dimodifikasi untuk berinteraksi dengan Flask API dan menambahkan fitur pemilihan kamera.
+// File: src/components/LiveAnalysis.tsx
+// Deskripsi: Komponen React yang diperbaiki untuk mengatasi error null reference
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +17,7 @@ const LiveAnalysis: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [feedback, setFeedback] = useState<string>('Mulai analisis untuk mendapatkan masukan.');
   const [repCount, setRepCount] = useState(0);
-  const [stage, setStage] = useState('up');
+  const [stage, setStage] = useState<string>('up'); // Initialize with 'up'
   const [error, setError] = useState<string | null>(null);
 
   // State untuk daftar kamera dan kamera yang dipilih
@@ -103,7 +103,12 @@ const LiveAnalysis: React.FC = () => {
       const response = await fetch('http://127.0.0.1:5000/analyze_frame', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: imageDataUrl }),
+        body: JSON.stringify({ 
+          image: imageDataUrl,
+          session_id: 'default',
+          mode: 'Beginner',
+          weight: 70
+        }),
       });
 
       if (!response.ok) throw new Error(`API request failed: ${response.statusText}`);
@@ -111,26 +116,36 @@ const LiveAnalysis: React.FC = () => {
       const result = await response.json();
       if (result.error) throw new Error(result.error);
 
-      setFeedback(result.feedback);
-      setRepCount(result.rep_count);
-      setStage(result.stage);
+      // Update state with safe fallbacks
+      setFeedback(result.feedback || 'Menganalisis...');
+      setRepCount(result.rep_count || 0);
+      setStage(result.stage || 'up'); // Ensure stage is never null
 
-      const displayCtx = canvasRef.current?.getContext('2d');
-      if (displayCtx && canvasRef.current) {
-        const image = new Image();
-        image.onload = () => {
-          canvasRef.current!.width = image.width;
-          canvasRef.current!.height = image.height;
-          displayCtx.drawImage(image, 0, 0);
-        };
-        image.src = result.processed_image;
+      // Safely update canvas if exists and processed_image is available
+      if (canvasRef.current && result.processed_image) {
+        const displayCtx = canvasRef.current.getContext('2d');
+        if (displayCtx) {
+          const image = new Image();
+          image.onload = () => {
+            if (canvasRef.current) { // Double check canvas still exists
+              canvasRef.current.width = image.width;
+              canvasRef.current.height = image.height;
+              displayCtx.drawImage(image, 0, 0);
+            }
+          };
+          image.onerror = () => {
+            console.error('Failed to load processed image');
+          };
+          image.src = result.processed_image;
+        }
       }
+      
       setError(null);
 
     } catch (err: any) {
       console.error("Error analyzing frame:", err);
       setError("Gagal terhubung ke server analisis. Pastikan server Python berjalan.");
-      stopAnalysis();
+      // Don't stop analysis on error, just log it
     }
 
     if (isAnalyzing) {
@@ -163,6 +178,8 @@ const LiveAnalysis: React.FC = () => {
     };
   }, [isAnalyzing, selectedDeviceId]);
 
+  // Safe stage display - ensure stage is never null
+  const displayStage = stage ? (stage.charAt(0).toUpperCase() + stage.slice(1)) : 'Up';
 
   return (
     <div className="container mx-auto p-4">
@@ -219,7 +236,7 @@ const LiveAnalysis: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <StatCard label="Repetisi" value={repCount} />
-            <StatCard label="Status" value={stage.charAt(0).toUpperCase() + stage.slice(1)} />
+            <StatCard label="Status" value={displayStage} />
           </div>
 
           <FeedbackDisplay feedback={feedback} />

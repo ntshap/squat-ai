@@ -158,6 +158,127 @@ const Demo = () => {
         </div>
       </section>
 
+      {/* Video Demo Section */}
+      <section className="py-24 px-6 relative bg-muted/30 border-y border-border">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-dashboard-yellow/15 border border-dashboard-yellow/30 rounded-full px-6 py-3 mb-8 animate-fade-in">
+              <Play className="w-5 h-5 text-dashboard-yellow" />
+              <span className="text-sm font-medium text-dashboard-yellow">Lihat Demo</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6 animate-fade-in">
+              Demo Analisis Squat
+            </h2>
+            <p className="text-xl text-slate-600 dark:text-muted-foreground max-w-3xl mx-auto animate-fade-in font-light">
+              Saksikan bagaimana SquatSense AI menganalisis postur dan memberikan umpan balik real-time
+            </p>
+          </div>
+          
+          {/* Large Video Container */}
+          <div className="relative max-w-5xl mx-auto group animate-fade-in">
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-dashboard-yellow/10 via-card to-dashboard-yellow/5 border border-dashboard-yellow/20 group-hover:border-dashboard-yellow/40 transition-all duration-500 hover:shadow-3xl hover:shadow-dashboard-yellow/20">
+              
+              {/* Demo Video */}
+              <video 
+                className="w-full h-full object-contain rounded-3xl bg-black/5"
+                controls
+                preload="metadata"
+                playsInline
+                autoPlay={false}
+                muted={false}
+              >
+                <source src="/original-demo.mp4" type="video/mp4" />
+                <source src="/original-demo.mp4" type="video/webm" />
+                <p className="text-center text-slate-600 dark:text-muted-foreground p-8">
+                  Video tidak dapat dimuat atau browser tidak mendukung format video. 
+                  <br />
+                  <a href="/original-demo.mp4" className="text-dashboard-yellow hover:underline" target="_blank" rel="noopener noreferrer">
+                    Buka video di tab baru
+                  </a>
+                  {" atau "}
+                  <a href="/original-demo.mp4" className="text-dashboard-yellow hover:underline" download>
+                    Download video
+                  </a>
+                </p>
+              </video>
+              
+              {/* Floating UI elements simulation - will show over video */}
+              <div className="absolute top-6 left-6 bg-card/90 backdrop-blur-sm rounded-xl px-4 py-2 border border-dashboard-yellow/20 shadow-lg pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-foreground">Analisis Real-time</span>
+                </div>
+              </div>
+              
+              <div className="absolute top-6 right-6 bg-card/90 backdrop-blur-sm rounded-xl px-4 py-2 border border-dashboard-yellow/20 shadow-lg pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <Target className="w-4 h-4 text-dashboard-yellow" />
+                  <span className="text-sm font-medium text-foreground">Postur: 92%</span>
+                </div>
+              </div>
+              
+              <div className="absolute bottom-6 left-6 bg-card/90 backdrop-blur-sm rounded-xl px-4 py-2 border border-dashboard-yellow/20 shadow-lg pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-dashboard-yellow" />
+                  <span className="text-sm font-medium text-foreground">Repetisi: 15</span>
+                </div>
+              </div>
+              
+              <div className="absolute bottom-6 right-6 bg-card/90 backdrop-blur-sm rounded-xl px-4 py-2 border border-dashboard-yellow/20 shadow-lg pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <span className="text-sm font-medium text-foreground">Improving</span>
+                </div>
+              </div>
+              
+              {/* Corner decorations */}
+              <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-dashboard-yellow/30 rounded-tl-lg pointer-events-none"></div>
+              <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-dashboard-yellow/30 rounded-tr-lg pointer-events-none"></div>
+              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-dashboard-yellow/30 rounded-bl-lg pointer-events-none"></div>
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-dashboard-yellow/30 rounded-br-lg pointer-events-none"></div>
+            </div>
+            
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-dashboard-yellow/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+          </div>
+          
+          {/* Feature highlights below video */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto">
+            {[
+              {
+                icon: <Activity className="w-6 h-6 text-dashboard-yellow" />,
+                title: "Analisis Real-time",
+                description: "Umpan balik langsung saat Anda berlatih"
+              },
+              {
+                icon: <Target className="w-6 h-6 text-dashboard-yellow" />,
+                title: "Deteksi Postur",
+                description: "AI mengidentifikasi kesalahan postur secara akurat"
+              },
+              {
+                icon: <TrendingUp className="w-6 h-6 text-dashboard-yellow" />,
+                title: "Tracking Progress",
+                description: "Pantau peningkatan performa dari waktu ke waktu"
+              }
+            ].map((item, index) => (
+              <div key={index} className="text-center group animate-fade-in hover-lift" style={{animationDelay: `${index * 0.1}s`}}>
+                <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-border group-hover:border-dashboard-yellow/40 transition-all duration-300 hover:shadow-lg">
+                  <div className="w-12 h-12 bg-dashboard-yellow/15 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-dashboard-yellow/25 transition-colors duration-300">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2 group-hover:text-dashboard-yellow transition-colors duration-300">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-24 px-6 relative">
         <div className="max-w-7xl mx-auto">
